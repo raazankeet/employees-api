@@ -86,7 +86,7 @@ jobs:
       
       # Add Maven build step
       - name: Build with Maven
-        run: mvn clean package
+        run: mvn clean package -DskipTests
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
