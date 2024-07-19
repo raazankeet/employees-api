@@ -3,6 +3,9 @@ package com.raazankeet.employeesapi.service;
 import com.raazankeet.employeesapi.exception.EmployeeNotFoundException;
 import com.raazankeet.employeesapi.model.Employee;
 import com.raazankeet.employeesapi.repository.EmployeeRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +17,9 @@ public class EmployeeService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public List<Employee> getAllEmployees() {
         return employeeRepository.findAll();
@@ -49,7 +55,16 @@ public class EmployeeService {
         employeeRepository.deleteAll();
     }
 
+    @Transactional
     public void loadData() {
+        // Clear all data
+        employeeRepository.deleteAll();
+
+        // Reset auto-increment sequence (works for H2, MySQL, PostgreSQL, etc.)
+        entityManager.createNativeQuery("TRUNCATE TABLE employee").executeUpdate();
+        entityManager.createNativeQuery("ALTER TABLE employee ALTER COLUMN id RESTART WITH 1").executeUpdate();
+
+        // Initial data load
         String csvData = "1,Ankit Raj,Senior Architect,IT,60000,New Delhi,raazankeet@gmail.com\n" +
                 "2,Sugata Saha,Senior Architect,IT,75000,Kolkata,sugata.saha123@wipro.com\n" +
                 "3,Hemant Waradkar,General Manager,IT,50000,Pune,hemant_waradkar@abc.com\n" +
