@@ -14,6 +14,7 @@ This project is a Spring Boot application providing a RESTful API for managing e
   - [API Endpoints](#api-endpoints)
   - [Running in Docker](#running-in-docker)
   - [Deploying to Azure](#deploying-to-azure)
+    [Acess it live](#access-it-live)
   - [Contributing](#contributing)
   - [License](#license)
 
@@ -45,7 +46,7 @@ This project is a Spring Boot application providing a RESTful API for managing e
 1. Clone the repository:
 
     ```sh
-    git clone https://github.com/your-username/employee-api.git
+    git clone https://github.com/raazankeet/employee-api.git
     cd employee-api
     ```
 
@@ -145,6 +146,9 @@ This project is a Spring Boot application providing a RESTful API for managing e
     ```
 
 3. Access your deployed service at `http://your-dns-name.<region>.azurecontainer.io/api/employees`.
+
+## Access it live
+    Acess it live here at `https://myemployeesapi.azurewebsites.net/`
 
 ## Contributing
 
