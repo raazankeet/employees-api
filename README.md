@@ -14,7 +14,7 @@ This project is a Spring Boot application providing a RESTful API for managing e
   - [API Endpoints](#api-endpoints)
   - [Running in Docker](#running-in-docker)
   - [Deploying to Azure](#deploying-to-azure)
-    [Acess it live](#access-it-live)
+  - [Access Live API](#access-live-api)
   - [Contributing](#contributing)
   - [License](#license)
 
@@ -64,9 +64,7 @@ This project is a Spring Boot application providing a RESTful API for managing e
     mvn spring-boot:run
     ```
 
-2. The API will be accessible at `http://localhost:8080/api/employees`.
-
-3. Access the Swagger UI for API documentation at `http://localhost:8080/swagger-ui/index.html`.
+2. The API will be accessible at `http://localhost:8080`.
 
 ## API Endpoints
 
@@ -119,40 +117,50 @@ This project is a Spring Boot application providing a RESTful API for managing e
 1. Build the Docker image:
 
     ```sh
-    docker build -t your-image-name:latest .
+    docker build -t employee-api .
     ```
 
 2. Run the Docker container:
 
     ```sh
-    docker run -p 8080:8080 your-image-name:latest
+    docker run -p 8080:8080 employee-api
     ```
-
-3. Access the API at `http://localhost:8080/api/employees`.
 
 ## Deploying to Azure
 
-1. Build and push the Docker image to your container registry:
+1. Ensure you have the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) installed and are logged in.
+
+2. Create a resource group:
 
     ```sh
-    docker build -t your-registry/your-image-name:latest .
-    docker push your-registry/your-image-name:latest
+    az group create --name employee-api-rg --location eastus
     ```
 
-2. Deploy to Azure Container Instances (ACI) or Azure Kubernetes Service (AKS) using the Azure CLI:
+3. Create an App Service plan:
 
     ```sh
-    az container create --resource-group your-resource-group --name your-container-name --image your-registry/your-image-name:latest --dns-name-label your-dns-name --ports 80
+    az appservice plan create --name employee-api-plan --resource-group employee-api-rg --sku B1 --is-linux
     ```
 
-3. Access your deployed service at `http://your-dns-name.<region>.azurecontainer.io/api/employees`.
+4. Create a web app:
 
-## Access it live
-    Acess it live here at `https://myemployeesapi.azurewebsites.net/`
+    ```sh
+    az webapp create --resource-group employee-api-rg --plan employee-api-plan --name myemployeesapi --deployment-container-image-name raazankeet/employee-api:latest
+    ```
+
+5. Configure continuous deployment from your Docker repository:
+
+    ```sh
+    az webapp config container set --name myemployeesapi --resource-group employee-api-rg --docker-custom-image-name raazankeet/employee-api:latest --docker-registry-server-url https://index.docker.io
+    ```
+
+## Access Live API
+
+You can access the live API at: [https://myemployeesapi.azurewebsites.net/](https://myemployeesapi.azurewebsites.net/)
 
 ## Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request for any enhancements or bug fixes.
+Contributions are welcome! Please submit a pull request or open an issue to discuss any changes.
 
 ## License
 
