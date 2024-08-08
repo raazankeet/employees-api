@@ -27,7 +27,7 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @Operation(summary = "Get all employees", description = "Retrieve a list of all employees.")
-    @GetMapping
+    @GetMapping(produces ={MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<List<Employee>> getAllEmployees() {
         logger.info("Fetching all employees");
         List<Employee> employees = employeeService.getAllEmployees();
