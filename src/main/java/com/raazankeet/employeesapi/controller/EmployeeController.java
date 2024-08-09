@@ -2,6 +2,7 @@ package com.raazankeet.employeesapi.controller;
 
 import com.raazankeet.employeesapi.exception.EmployeeNotFoundException;
 import com.raazankeet.employeesapi.model.Employee;
+import com.raazankeet.employeesapi.model.Employees;
 import com.raazankeet.employeesapi.response.StatusResponse;
 import com.raazankeet.employeesapi.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.MediaType;
+
 @RestController
 @RequestMapping("/api/employees")
 public class EmployeeController {
@@ -27,11 +30,12 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @Operation(summary = "Get all employees", description = "Retrieve a list of all employees.")
-    @GetMapping
-    public ResponseEntity<List<Employee>> getAllEmployees() {
-        logger.info("Fetching all employees");
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public Employees getAllEmployees() {
         List<Employee> employees = employeeService.getAllEmployees();
-        return ResponseEntity.ok(employees);
+        Employees wrapper = new Employees();
+        wrapper.setEmployees(employees);
+        return wrapper;
     }
 
     @Operation(summary = "Get employee by ID", description = "Retrieve an employee by their unique ID.")
@@ -48,10 +52,11 @@ public class EmployeeController {
     }
 
     @Operation(summary = "Create a new employee", description = "Add a new employee to the system.")
-    @PostMapping
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
         logger.info("Creating new employee: {}", employee);
         Employee createdEmployee = employeeService.createEmployee(employee);
+        logger.info("Created new employee: {}", createdEmployee);
         return new ResponseEntity<>(createdEmployee, HttpStatus.CREATED);
     }
 
